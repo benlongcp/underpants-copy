@@ -21,6 +21,10 @@ var _ = {};
 *   _.identity({a: "b"}) === {a: "b"}
 */
 
+_.identity = function(value){
+    //returns value as-is
+    return value;
+}
 
 /** _.typeOf
 * Arguments:
@@ -42,6 +46,21 @@ var _ = {};
 * _.typeOf([1,2,3]) -> "array"
 */
 
+//creates a function _.typeof that takes one parameter
+_.typeOf = function(value){
+    //checks if object is an array
+    if (Array.isArray(value)){
+        return "array";
+    } else if (value === null){
+        return "null";
+    } else{ 
+        //else returns the value with the typeof operator
+        return typeof value;
+    }
+}
+
+
+
 
 /** _.first
 * Arguments:
@@ -60,6 +79,30 @@ var _ = {};
 *   _.first(["a", "b", "c"], 1) -> "a"
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
+
+
+//creates a function that takes an array and a number as parameters
+_.first = function(arr, num){
+    
+    //checks if the array is NOT an array
+    if(!Array.isArray(arr)){
+        return []; //if not returns an empty array
+        //check if the number is NOT equal to typeof "number", 
+       
+    } else if (typeof num !== "number"){
+         //return the 0th element in the array
+        return arr[0];
+    } else if (num <= 0){
+        return [];
+        //else return the sliced portion of the array equal to the input number
+    } else{
+        return arr.slice(0, num);
+    }
+        
+}
+
+
+
 
 
 /** _.last
@@ -81,6 +124,27 @@ var _ = {};
 */
 
 
+//creates function _.last
+_.last = function(arr, num){
+    //checks if the array is not an array
+    if (!Array.isArray(arr)){
+        return []; //if not returns an empty array
+    //check if the number is NOT equal to typeof "number", 
+   
+} else if (typeof num !== "number"){
+     //return the 0th element in the array
+    return arr[arr.length - 1];
+} else if (num <= 0){
+    return [];
+    //else return the sliced portion of the array equal to the negative input number (sliced from the end)
+} else{
+    return arr.slice(-num);
+}
+    
+}
+
+
+
 /** _.indexOf
 * Arguments:
 *   1) An array
@@ -96,6 +160,17 @@ var _ = {};
 *   _.indexOf(["a","b","c"], "c") -> 2
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
+_.indexOf = function(arr, val){
+    //loop through the array
+    for (let i = 0; i < arr.length; i++){
+        //check if the current index of arr contains the input val
+        if (arr[i] === val){
+            return i;
+        }
+    }
+    return -1;
+}
+
 
 
 /** _.contains
@@ -112,6 +187,24 @@ var _ = {};
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+
+//creates a funciton taking array and value params
+_.contains = function(arr, val){
+    //create a truth-o-meter
+    let truth = 0;
+    //loop through the array
+    for (let i = 0; i < arr.length; i++){
+        //check to see if each array index equals value
+        if(arr[i] === val){
+            //make the truth-o-meter positive
+            truth = 1;
+        }
+    }
+        //if the truth meter is positive, return true, else return false
+        return truth > 0 ? true : false;
+
+
+}
 
 
 /** _.each
@@ -130,6 +223,25 @@ var _ = {};
 *      -> should log "a" "b" "c" to the console
 */
 
+//creates a function that takes a collection and a function as parameters
+_.each = function(coll, func){
+    //check is object is an array
+    if (Array.isArray(coll)){
+        //iterate through the array
+        for (let i = 0; i < coll.length; i++){
+            //call the function for each element. its index, and the collection
+            func(coll[i], i, coll);
+            }       
+    } else {
+        //iterate through the object
+        for (let key in coll){
+            //call the function for each property value, the key, and the collection
+            func(coll[key], key, coll);
+        }
+    }
+
+}
+
 
 /** _.unique
 * Arguments:
@@ -140,6 +252,28 @@ var _ = {};
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
+
+
+
+_.unique = function(arr){
+    //create empty array to return later
+    let noDupes = [];
+    //loop through the array
+    for (let i = 0; i < arr.length; i++){
+        //use indexOf to check if noDupes contains the current array index value
+        if (_.indexOf(noDupes, arr[i]) === -1){
+            //if it does not contain the current array index, push the array index to noDupes
+            noDupes.push(arr[i]);
+        }
+    }
+
+
+    return noDupes;
+}
+
+
+
+
 
 
 /** _.filter
@@ -157,6 +291,30 @@ var _ = {};
 * Extra Credit:
 *   use _.each in your implementation
 */
+
+//_.filter function takes an array and a function as parameters
+_.filter = function(arr, func){
+    //create an empty array to return later
+    let retArr = [];
+    //loop through the array
+    for (let i = 0; i < arr.length; i++){
+        //call func for each array element and check if true
+        if (func(arr[i], i, arr) === true){
+            //push this array value to our retArr
+            retArr.push(arr[i]);
+        }
+
+    }
+    //returns retArr
+    return retArr;
+}
+
+
+
+
+
+
+
 
 
 /** _.reject
@@ -208,6 +366,34 @@ var _ = {};
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
+
+_.map = function(collection, func){
+    //create empty array to return
+    let retArr = [];
+    //iterates through a collection and returns a new collection where each value has been transformed by a callback funciton
+    //check if collection is an array
+    if (Array.isArray(collection)){
+        //if it is loop through the array with a for loop
+        for (i = 0; i < collection.length; i++){
+            //pass the index and index value to the func and push to return array
+            retArr.push(func(collection[i], i, collection));
+        }
+    } else {
+        //else loop through the presumed object with a for in loop
+        for (let key in collection){
+            //else pass the value and key to the func and push output to return array
+            retArr.push(func(collection[key], key, collection));
+        }
+    }
+    return retArr;
+
+}
+
+
+
+
+
+
 
 
 /** _.pluck
